@@ -1,17 +1,4 @@
-
-import json
-
-
-def load_data(file_path):
-    """
-    Load JSON data from a file.
-
-    Args: file_path (str): The path to the JSON file containing animal data.
-
-    Returns: list: A list of dictionaries, where each dictionary represents an animal and its data.
-    """
-    with open(file_path, "r") as file:
-        return json.load(file)
+import data_fetcher
 
 
 def get_animals_info():
@@ -20,17 +7,21 @@ def get_animals_info():
 
     Returns: str: A string containing formatted information about each animal.
     """
-    # Load animal data from the JSON file
-    animals_data = load_data("animals_data.json")
-    animal_info_html = "" # define an empty string
+    animal_info_html = ""  # define an empty string
+    animal_name = input("Please enter animal name: ")
+    animals_data = data_fetcher.fetch_data(animal_name)
 
-    # Iterate through the list of animals and extract specific information
+    if not animals_data:
+        return f"<h2>The animal '{animal_name}' doesn't exist.</h2>"
+
+        # Iterate through the list of animals and extract specific information
     for animal in animals_data:
-        animal_name = animal["name"]
-        animal_diet = animal["characteristics"]["diet"]
-        animal_location = animal["locations"][0]
-        # Use "Unknown" if the type is missing
-        animal_type = animal["characteristics"].get("type", "Unknown")
+        for animal_info in animal:
+            animal_name = animal["name"]
+            animal_diet = animal["characteristics"]["diet"]
+            animal_location = animal["locations"][0]
+            # Use "Unknown" if the type is missing
+            animal_type = animal["characteristics"].get("type", "Unknown")
 
         # Append formatted information for each animal
         animal_info_html += (
@@ -45,6 +36,7 @@ def get_animals_info():
             f"\t\t</p>\n"
             f"\t</li>\n"
         )
+
     return animal_info_html
 
 
@@ -68,6 +60,7 @@ def make_new_html_file(file_path):
     new_html = "animals.html"
     with open(new_html, "w") as file:
         file.write(updated_html_content)
+    print(f"Website was successfully generated to the file {new_html}")
 
 
 def main():
@@ -79,6 +72,7 @@ def main():
     template_file = "animals_template.html"
     # Create the new HTML file using the template
     make_new_html_file(template_file)
+
 
 
 if __name__ == "__main__":
