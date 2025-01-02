@@ -5,7 +5,6 @@ from dotenv import load_dotenv
 load_dotenv()
 
 
-
 API_KEY = os.getenv('API_KEY')
 #print(API_KEY)
 REQUEST_URL = "https://api.api-ninjas.com/v1/animals?name="
